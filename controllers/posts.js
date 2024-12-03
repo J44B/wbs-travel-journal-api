@@ -8,21 +8,20 @@ export async function getAllPosts(req, res, next) {
     res.json(posts);
 }
 
-export async function createPost(req, res, next) {
-    const { body } = req;
-    const newPost = await (await Post.create({ ...body })).populate('author');
-    res.status(201).json(newPost);
-}
-
 export async function getSinglePost(req, res, next) {
     const {
         params: { id },
     } = req;
     if (!isValidObjectId(id)) throw new ErrorResponse('Invalid id', 400);
     const post = await Post.findById(id).populate('author');
-    if (!post)
-        throw new ErrorResponse(`Post with id of ${id} doesn't exist`, 404);
-    res.send(post);
+    if (!post) throw new ErrorResponse(`Post with id ${id} doesn't exist`, 404);
+    res.json(post);
+}
+
+export async function createPost(req, res, next) {
+    const { body } = req;
+    const newPost = await (await Post.create({ ...body })).populate('author');
+    res.status(201).json(newPost);
 }
 
 export async function updatePost(req, res, next) {
@@ -35,7 +34,7 @@ export async function updatePost(req, res, next) {
         new: true,
     }).populate('author');
     if (!updatedPost)
-        throw new ErrorResponse(`Post with id of ${id} doesn't exist`, 404);
+        throw new ErrorResponse(`Post with id ${id} doesn't exist`, 404);
     res.json(updatedPost);
 }
 
