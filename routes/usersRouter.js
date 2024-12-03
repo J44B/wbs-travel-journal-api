@@ -3,7 +3,6 @@ import validateJOI from '../middlewares/validateJOI.js';
 import {
     getAllUsers,
     getSingleUser,
-    createUser,
     updateUser,
     deleteUser,
 } from '../controllers/users.js';
@@ -11,10 +10,7 @@ import { userSchema } from '../joi/schemas.js';
 
 const usersRouter = Router();
 
-usersRouter
-    .route('/')
-    .get(getAllUsers)
-    .post(validateJOI(userSchema), createUser);
+usersRouter.route('/').get(getAllUsers);
 
 usersRouter
     .route('/:id')
