@@ -1,18 +1,24 @@
 import { Router } from 'express';
 import validateJOI from '../middlewares/validateJOI.js';
-import { createUser, getSingleUser } from '../controllers/users.js';
-import { userSchema, singinSchema } from '../joi/schemas.js';
+import { userSchema, signinSchema } from '../joi/schemas.js';
+import { me, signin, signup, signout } from '../controllers/auth.js';
+import { verifyToken } from '../middlewares/verifyToken.js';
 
 const authRouter = Router();
 
+// signup
+// Create user
 // Return JWT
-authRouter.route('/signup').post(validateJOI(userSchema), createUser);
+authRouter.post('/signup', validateJOI(userSchema), signup);
 
+// signin
 // Verify credentials
 // Return JWT
-authRouter.route('/signin/:id').post(validateJOI(singinSchema), getSingleUser);
+authRouter.post('/signin', validateJOI(signinSchema), signin);
 
 // receive a request with a token and return associated user data
-authRouter.route('/me/:id').get(getSingleUser);
+authRouter.get('/me', verifyToken, me);
+
+authRouter.delete('/signout', signout);
 
 export default authRouter;

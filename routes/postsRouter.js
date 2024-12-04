@@ -8,13 +8,14 @@ import {
     updatePost,
 } from '../controllers/posts.js';
 import { postSchema } from '../joi/schemas.js';
+import { verifyToken } from '../middlewares/verifyToken.js';
 
 const postsRouter = Router();
 
 postsRouter
     .route('/')
     .get(getAllPosts)
-    .post(validateJOI(postSchema), createPost);
+    .post(verifyToken, validateJOI(postSchema), createPost);
 
 postsRouter
     .route('/:id')

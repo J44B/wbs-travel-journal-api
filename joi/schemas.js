@@ -7,7 +7,7 @@ export const userSchema = Joi.object({
     password: Joi.string().alphanum().min(8).max(24).required(),
 });
 
-export const singinSchema = Joi.object({
+export const signinSchema = Joi.object({
     email: Joi.string().required(),
     password: Joi.string().alphanum().min(8).max(24).required(),
 });
