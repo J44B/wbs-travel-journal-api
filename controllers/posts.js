@@ -29,6 +29,7 @@ export async function updatePost(req, res, next) {
     const {
         body,
         params: { id },
+        userId,
     } = req;
     if (!isValidObjectId(id)) throw new ErrorResponse('Invalid id', 400);
     const updatedPost = await Post.findByIdAndUpdate(id, body, {
@@ -36,18 +37,24 @@ export async function updatePost(req, res, next) {
     }).populate('author', '_id');
     if (!updatedPost)
         throw new ErrorResponse(`Post with id ${id} doesn't exist`, 404);
+
+    if (updatedPost.author._id.toString() !== userId)
+        throw new ErrorResponse('Not authorized to edit this post, 403');
     res.json(updatedPost);
 }
 
 export async function deletePost(req, res, next) {
     const {
         params: { id },
+        userId,
     } = req;
     if (!isValidObjectId(id)) throw new ErrorResponse('Invalid id', 400);
-    const deletedPost = await Post.findByIdAndDelete(id).populate(
-        'author',
-        '_id'
-    );
-    if (!deletedPost) throw new Error(`Post with id ${id} doesn't exist`);
+    const post = await Post.findByIdAndDelete(id).populate('author');
+    if (!post) throw new Error(`Post with id ${id} doesn't exist`);
+
+    if (post.author._id.toString() !== userId)
+        throw new ErrorResponse('Not authorized to delete this post, 403');
+
+    await Post.findByIdAndDelete(id);
     res.json({ success: `Post with id ${id} was deleted` });
 }

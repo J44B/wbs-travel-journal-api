@@ -19,7 +19,7 @@ export async function me(req, res) {
 export async function signup(req, res) {
     const { firstName, lastName, email, password } = req.body;
 
-    const alreadyExists = await User.findOneAndDelete({ email });
+    const alreadyExists = await User.findOne({ email });
     if (alreadyExists) throw new ErrorResponse('User already exists', 400);
 
     const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -57,7 +57,9 @@ export async function signin(req, res) {
 
     if (!isMatch) throw new ErrorResponse('Unauthorized', 401);
 
-    const token = jwt.sign({ id: User._id }, secret, { expiresIn: '3d' });
+    const token = jwt.sign({ id: user._id }, secret, { expiresIn: '3d' });
+
+    // console.log(token);
 
     const isProduction = process.env.NODE_ENV == 'production';
     const cookieOptions = {
