@@ -1,7 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
-
 import ErrorResponse from '../utils/ErrorResponse.js';
 
 export async function me(req, res) {
@@ -60,5 +59,5 @@ export async function signup(req, res) {
         secure: isProduction,
     };
     res.cookie('token', token, cookieOptions);
-    res.status(201).json({ success: 'welcome aboard' });
+    res.status(201).json({ success: `Welcome aboard, ${user.firstName}` });
 }
