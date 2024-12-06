@@ -20,7 +20,7 @@ postsRouter
 postsRouter
     .route('/:id')
     .get(getSinglePost)
-    .put(validateJOI(postSchema), updatePost)
-    .delete(deletePost);
+    .put(verifyToken, validateJOI(postSchema), updatePost)
+    .delete(verifyToken, deletePost);
 
 export default postsRouter;

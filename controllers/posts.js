@@ -48,6 +48,7 @@ export async function deletePost(req, res, next) {
     } = req;
     if (!isValidObjectId(id)) throw new ErrorResponse('Invalid id', 400);
     const post = await Post.findById(id).populate('author');
+    console.log({ userId, id, post });
     if (!post)
         throw new ErrorResponse(`Post with id  ${id} doesn't exist`, 404);
     if (post.author._id.toString() !== userId)
